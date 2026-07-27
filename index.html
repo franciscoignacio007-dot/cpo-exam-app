@@ -3,403 +3,938 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CPO 2025 Practice</title>
+  <meta name="theme-color" content="#0f172a" />
+  <title>CPO Practice Centre</title>
   <style>
     :root{
-      --bg:#f4f7fb; --card:#ffffff; --text:#18212f; --muted:#64748b; --border:#d6deea;
-      --accent:#2563eb; --good:#166534; --bad:#991b1b; --shadow:0 10px 28px rgba(0,0,0,.08);
+      --bg:#eef3f9;
+      --card:#ffffff;
+      --card-soft:#f8fafc;
+      --text:#162033;
+      --muted:#64748b;
+      --border:#d7e0ec;
+      --accent:#2563eb;
+      --accent-dark:#1d4ed8;
+      --accent-soft:#dbeafe;
+      --good:#15803d;
+      --good-soft:#dcfce7;
+      --bad:#b91c1c;
+      --bad-soft:#fee2e2;
+      --warning:#a16207;
+      --warning-soft:#fef3c7;
+      --flag:#7c3aed;
+      --flag-soft:#ede9fe;
+      --current:#0f766e;
+      --current-soft:#ccfbf1;
+      --shadow:0 14px 34px rgba(15,23,42,.10);
+      --radius:18px;
     }
+
     body.dark{
-      --bg:#0b1220; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --border:#374151;
-      --accent:#60a5fa; --good:#4ade80; --bad:#f87171; --shadow:0 12px 28px rgba(0,0,0,.35);
+      --bg:#07101e;
+      --card:#111c2e;
+      --card-soft:#0d1727;
+      --text:#e5edf8;
+      --muted:#9fb0c7;
+      --border:#30415a;
+      --accent:#60a5fa;
+      --accent-dark:#3b82f6;
+      --accent-soft:#172f53;
+      --good:#4ade80;
+      --good-soft:#123722;
+      --bad:#f87171;
+      --bad-soft:#421d24;
+      --warning:#facc15;
+      --warning-soft:#3b3213;
+      --flag:#c4b5fd;
+      --flag-soft:#31265a;
+      --current:#5eead4;
+      --current-soft:#123c3b;
+      --shadow:0 14px 34px rgba(0,0,0,.38);
     }
+
     *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    button,input{font:inherit}
+    button:disabled{opacity:.45;cursor:not-allowed}
+
     .topbar{
-      display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;
-      padding:14px 16px;border-bottom:1px solid var(--border);background:var(--card);
-      position:sticky;top:0;z-index:10;box-shadow:var(--shadow);
+      position:sticky;
+      top:0;
+      z-index:100;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:14px;
+      min-height:70px;
+      padding:12px 18px;
+      background:var(--card);
+      border-bottom:1px solid var(--border);
+      box-shadow:0 6px 20px rgba(15,23,42,.08);
     }
-    .brand{font-size:28px;font-weight:700}
-    .timer{text-align:center;font-size:22px;font-weight:700;min-width:120px;color:var(--accent)}
-    .theme-btn{
-      justify-self:end;padding:10px 14px;border:1px solid var(--border);border-radius:12px;
-      background:var(--card);color:var(--text);cursor:pointer;
-    }
-    .wrap{
-      max-width:1180px;margin:24px auto;padding:0 16px 40px;display:grid;
-      grid-template-columns:1fr 320px;gap:20px;
-    }
+    .brand{font-size:26px;font-weight:800;letter-spacing:.2px}
+    .brand small{display:block;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-top:2px}
+    .timer{text-align:center;font-size:22px;font-weight:800;color:var(--accent);min-width:145px}
+    .top-actions{justify-self:end;display:flex;gap:8px}
+
+    .page{max-width:1240px;margin:24px auto;padding:0 16px 42px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:20px;align-items:start}
     .card{
-      background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:var(--shadow);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
     }
-    .title{font-size:30px;font-weight:700;margin:0 0 10px}
-    .subtitle{color:var(--muted);line-height:1.5;margin:0 0 18px}
-    .label{font-size:14px;color:var(--muted);margin-bottom:6px}
-    input,button{font:inherit}
-    input[type="text"]{
-      width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;
-      background:var(--bg);color:var(--text);margin-bottom:14px;
-    }
-    .btn-row{display:flex;flex-wrap:wrap;gap:10px}
-    .btn{
-      padding:12px 16px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);cursor:pointer;
-    }
-    .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
-    .stat{border:1px solid var(--border);border-radius:14px;background:var(--bg);padding:14px;text-align:center}
-    .stat .k{font-size:13px;color:var(--muted)}
-    .stat .v{margin-top:4px;font-size:20px;font-weight:700}
-    .section-label{
-      display:inline-block;padding:6px 10px;border-radius:999px;background:var(--bg);
-      border:1px solid var(--border);font-size:12px;color:var(--muted);margin-bottom:14px
-    }
-    .question{font-size:24px;line-height:1.45;font-weight:700;margin:0 0 18px}
-    .option{
-      display:block;width:100%;text-align:left;padding:14px;margin-bottom:12px;border:1px solid var(--border);
-      border-radius:12px;background:var(--bg);color:var(--text);cursor:pointer;
-    }
-    .option.selected{border-color:var(--accent);outline:2px solid rgba(37,99,235,.18)}
-    .nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .box{border:1px solid var(--border);border-radius:12px;background:var(--bg);padding:12px;margin-bottom:10px;line-height:1.45}
-    .side-title{font-size:22px;font-weight:700;margin:0 0 12px}
-    .badge{
-      display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;margin:4px 6px 0 0;
-      font-size:12px;background:var(--card);
-    }
-    .good{color:var(--good);font-weight:700}
-    .bad{color:var(--bad);font-weight:700}
+    .card + .card{margin-top:18px}
+    .side-sticky{position:sticky;top:92px}
+    .title{font-size:32px;line-height:1.15;font-weight:800;margin:0 0 10px}
+    .subtitle{color:var(--muted);line-height:1.6;margin:0 0 20px}
+    .section-title{font-size:22px;font-weight:800;margin:0 0 14px}
+    .small-title{font-size:15px;font-weight:800;margin:0 0 8px}
     .muted{color:var(--muted)}
     .empty{color:var(--muted);font-style:italic}
-    .error{
-      max-width:900px;margin:24px auto;padding:16px;border:2px solid #ff6b6b;background:#fff1f2;color:#7f1d1d;
-      border-radius:12px;white-space:pre-wrap;
+    .good{color:var(--good);font-weight:800}
+    .bad{color:var(--bad);font-weight:800}
+    .warning{color:var(--warning);font-weight:800}
+
+    .label{font-size:13px;color:var(--muted);font-weight:700;margin:0 0 7px}
+    input[type="text"]{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:var(--card-soft);
+      color:var(--text);
+      outline:none;
+      margin-bottom:16px;
     }
-    @media (max-width:900px){
-      .wrap{grid-template-columns:1fr}
+    input[type="text"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+    .btn-row{display:flex;flex-wrap:wrap;gap:10px}
+    .btn{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:11px 15px;
+      background:var(--card);
+      color:var(--text);
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .12s ease,border-color .12s ease,background .12s ease;
+    }
+    .btn:hover:not(:disabled){transform:translateY(-1px);border-color:var(--accent)}
+    .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn.primary:hover:not(:disabled){background:var(--accent-dark)}
+    .btn.success{background:var(--good);border-color:var(--good);color:#fff}
+    .btn.warning{background:var(--warning-soft);border-color:var(--warning);color:var(--warning)}
+    .btn.flagged{background:var(--flag-soft);border-color:var(--flag);color:var(--flag)}
+    .btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+    .btn.ghost{background:transparent}
+    .btn.wide{width:100%;justify-content:center}
+
+    .mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+    .mode-card{
+      text-align:left;
+      padding:18px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:var(--card-soft);
+      color:var(--text);
+      cursor:pointer;
+      min-height:142px;
+      transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;
+    }
+    .mode-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 10px 24px rgba(37,99,235,.12)}
+    .mode-card.featured{border:2px solid var(--accent);background:linear-gradient(145deg,var(--accent-soft),var(--card-soft))}
+    .mode-name{font-size:19px;font-weight:800;margin-bottom:7px}
+    .mode-desc{font-size:13px;color:var(--muted);line-height:1.5}
+    .mode-tag{display:inline-block;margin-top:12px;padding:5px 9px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:11px;font-weight:800;color:var(--muted)}
+
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:18px}
+    .stat{border:1px solid var(--border);border-radius:14px;background:var(--card-soft);padding:13px;text-align:center;min-width:0}
+    .stat .k{font-size:12px;color:var(--muted);font-weight:700}
+    .stat .v{font-size:19px;font-weight:800;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .section-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--card-soft);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:800;margin-bottom:14px}
+    .question{font-size:23px;line-height:1.45;font-weight:800;margin:0 0 18px}
+    .option{
+      display:flex;
+      align-items:flex-start;
+      gap:11px;
+      width:100%;
+      text-align:left;
+      padding:14px;
+      margin-bottom:11px;
+      border:1px solid var(--border);
+      border-radius:13px;
+      background:var(--card-soft);
+      color:var(--text);
+      cursor:pointer;
+      line-height:1.45;
+    }
+    .option:hover{border-color:var(--accent)}
+    .option.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+    .option.correct{border-color:var(--good);background:var(--good-soft)}
+    .option.incorrect{border-color:var(--bad);background:var(--bad-soft)}
+    .option-letter{flex:0 0 29px;height:29px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;font-weight:800;background:var(--card)}
+    .option.selected .option-letter{border-color:var(--accent);background:var(--accent);color:#fff}
+
+    .question-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:17px;border-top:1px solid var(--border)}
+    .question-nav-group{display:flex;flex-wrap:wrap;gap:9px}
+
+    .progress-track{height:9px;border-radius:999px;background:var(--border);overflow:hidden;margin:8px 0 14px}
+    .progress-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .2s ease}
+    .status-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+    .status-box{padding:10px 7px;text-align:center;border:1px solid var(--border);border-radius:11px;background:var(--card-soft)}
+    .status-box strong{display:block;font-size:18px;margin-bottom:2px}
+    .status-box span{font-size:11px;color:var(--muted);font-weight:700}
+
+    .palette{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-height:430px;overflow:auto;padding:2px}
+    .q-jump{
+      position:relative;
+      aspect-ratio:1;
+      min-height:43px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:var(--card-soft);
+      color:var(--text);
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .q-jump.answered{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+    .q-jump.flagged{background:var(--flag-soft);border-color:var(--flag);color:var(--flag)}
+    .q-jump.answered.flagged{background:linear-gradient(135deg,var(--good-soft) 0 50%,var(--flag-soft) 50% 100%)}
+    .q-jump.current{outline:3px solid var(--current);outline-offset:1px}
+    .q-jump .flag-mark{position:absolute;right:3px;top:1px;font-size:10px}
+
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;font-size:11px;color:var(--muted)}
+    .legend span{display:flex;align-items:center;gap:5px}
+    .legend i{width:12px;height:12px;border-radius:3px;border:1px solid var(--border);display:inline-block;background:var(--card-soft)}
+    .legend .l-answered{background:var(--good-soft);border-color:var(--good)}
+    .legend .l-flagged{background:var(--flag-soft);border-color:var(--flag)}
+    .legend .l-current{outline:2px solid var(--current)}
+
+    .box{border:1px solid var(--border);border-radius:13px;background:var(--card-soft);padding:13px;margin-bottom:10px;line-height:1.5}
+    .badge{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;margin:4px 5px 0 0;font-size:11px;background:var(--card);color:var(--muted)}
+
+    .review-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+    .review-block{padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--card-soft);text-align:center}
+    .review-block strong{display:block;font-size:28px;margin-bottom:4px}
+    .review-block span{font-size:12px;color:var(--muted);font-weight:700}
+    .review-list{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}
+    .review-q{
+      min-height:44px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:var(--card-soft);
+      color:var(--text);
+      font-weight:800;
+      cursor:pointer;
+    }
+    .review-q.unanswered{border-color:var(--warning);background:var(--warning-soft);color:var(--warning)}
+    .review-q.flagged{box-shadow:inset 0 -4px 0 var(--flag)}
+
+    .result-hero{text-align:center;padding:12px 0 8px}
+    .result-score{font-size:56px;font-weight:900;line-height:1;color:var(--accent);margin:10px 0}
+    .result-status{display:inline-block;padding:8px 16px;border-radius:999px;font-weight:900;margin-bottom:12px}
+    .result-status.pass{color:var(--good);background:var(--good-soft);border:1px solid var(--good)}
+    .result-status.fail{color:var(--bad);background:var(--bad-soft);border:1px solid var(--bad)}
+
+    .review-answer{margin-bottom:16px}
+    .review-answer .question{font-size:19px;margin-bottom:12px}
+    .answer-line{padding:9px 11px;border-radius:10px;margin-top:7px;background:var(--card);border:1px solid var(--border)}
+    .answer-line.correct{border-color:var(--good);background:var(--good-soft)}
+    .answer-line.incorrect{border-color:var(--bad);background:var(--bad-soft)}
+    .explanation{margin-top:10px;padding:11px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:8px;line-height:1.5}
+
+    .confirm-panel{border:1px solid var(--warning);background:var(--warning-soft);border-radius:14px;padding:15px;margin-top:16px}
+    .error{max-width:920px;margin:24px auto;padding:18px;border:2px solid var(--bad);background:var(--bad-soft);color:var(--bad);border-radius:14px;white-space:pre-wrap}
+
+    @media (max-width:960px){
+      .layout{grid-template-columns:1fr}
+      .side-sticky{position:static}
+      .palette{grid-template-columns:repeat(8,1fr);max-height:none}
+    }
+    @media (max-width:680px){
+      .topbar{grid-template-columns:1fr auto;padding:10px 12px}
+      .brand{font-size:20px}
+      .brand small{font-size:9px}
+      .timer{grid-column:1/-1;grid-row:2;font-size:18px;padding-top:2px}
+      .top-actions{grid-column:2;grid-row:1}
+      .page{margin-top:15px;padding:0 10px 30px}
+      .card{padding:16px;border-radius:15px}
+      .title{font-size:26px}
+      .mode-grid{grid-template-columns:1fr}
       .stats{grid-template-columns:1fr 1fr}
-      .brand{font-size:22px}
-      .timer{font-size:20px}
-      .title{font-size:24px}
-      .question{font-size:20px}
+      .question{font-size:19px}
+      .palette{grid-template-columns:repeat(5,1fr)}
+      .review-summary{grid-template-columns:1fr 1fr 1fr;gap:7px}
+      .review-block{padding:12px 5px}
+      .review-list{grid-template-columns:repeat(5,1fr)}
+      .result-score{font-size:44px}
+      .question-nav,.question-nav-group{width:100%}
+      .question-nav-group .btn{flex:1}
     }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand">CPO 2025</div>
+  <header class="topbar">
+    <div class="brand">CPO Practice Centre<small>Professional Protection Officer Study System</small></div>
     <div class="timer" id="timer">--:--</div>
-    <button class="theme-btn" id="themeBtn">Night Mode</button>
-  </div>
-  <div id="app"></div>
+    <div class="top-actions">
+      <button class="btn ghost" id="themeBtn" type="button">Night Mode</button>
+    </div>
+  </header>
+
+  <main id="app"></main>
 
   <script>
-    window.onerror = function(message, source, lineno, colno) {
+    window.onerror = function(message, source, lineno, colno){
       var app = document.getElementById("app");
-      if (app) {
-        app.innerHTML = '<div class="error"><strong>JavaScript error:</strong>\n' + String(message) + '\nLine: ' + lineno + ', Column: ' + colno + '</div>';
+      if(app){
+        app.innerHTML = '<div class="error"><strong>JavaScript error:</strong>\n' +
+          String(message) + '\nLine: ' + String(lineno) + ', Column: ' + String(colno) + '</div>';
       }
     };
   </script>
+
   <script src="./cpo_2025_v2_system.js"></script>
+
   <script>
     (function(){
+      "use strict";
+
       var app = document.getElementById("app");
       var timerEl = document.getElementById("timer");
       var themeBtn = document.getElementById("themeBtn");
+      var PASS_PERCENT = 80;
 
       var state = {
-        mode: null,
-        name: "",
-        questions: [],
-        current: 0,
-        answers: [],
-        score: 0,
-        startedAt: null,
-        timeLimitSec: 0,
-        timerHandle: null,
-        darkMode: false,
-        history: []
+        screen:"home",
+        modeKey:null,
+        modeLabel:"",
+        name:"",
+        questions:[],
+        current:0,
+        answers:[],
+        flags:[],
+        startedAt:null,
+        completedAt:null,
+        timeLimitSec:0,
+        timerHandle:null,
+        submitted:false,
+        result:null,
+        reviewFilter:"all",
+        history:[],
+        darkMode:false,
+        confirmSubmit:false
       };
 
-      function loadJson(key, fallback){
+      function escapeHtml(value){
+        return String(value == null ? "" : value)
+          .replace(/&/g,"&amp;")
+          .replace(/</g,"&lt;")
+          .replace(/>/g,"&gt;")
+          .replace(/\"/g,"&quot;")
+          .replace(/'/g,"&#039;");
+      }
+
+      function loadJson(key,fallback){
         try{
           var raw = localStorage.getItem(key);
           return raw ? JSON.parse(raw) : fallback;
-        }catch(e){
+        }catch(error){
           return fallback;
         }
       }
-      function saveJson(key, value){
-        localStorage.setItem(key, JSON.stringify(value));
+
+      function saveJson(key,value){
+        try{ localStorage.setItem(key,JSON.stringify(value)); }catch(error){}
       }
-      function escapeHtml(text){
-        return String(text)
-          .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-          .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-      }
+
       function applyTheme(){
-        if(state.darkMode){
-          document.body.classList.add("dark");
-          themeBtn.textContent = "Light Mode";
-        }else{
-          document.body.classList.remove("dark");
-          themeBtn.textContent = "Night Mode";
-        }
+        document.body.classList.toggle("dark",state.darkMode);
+        themeBtn.textContent = state.darkMode ? "Light Mode" : "Night Mode";
       }
+
+      function formatClock(totalSec){
+        totalSec = Math.max(0,Math.floor(totalSec || 0));
+        var h = Math.floor(totalSec / 3600);
+        var m = Math.floor((totalSec % 3600) / 60);
+        var s = totalSec % 60;
+        if(h > 0){
+          return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+        }
+        return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+      }
+
+      function elapsedSeconds(){
+        if(!state.startedAt) return 0;
+        var end = state.completedAt || Date.now();
+        return Math.max(0,Math.floor((end - state.startedAt) / 1000));
+      }
+
       function stopTimer(){
         if(state.timerHandle){
           clearInterval(state.timerHandle);
           state.timerHandle = null;
         }
       }
-      function formatTime(sec){
-        if(sec < 0) sec = 0;
-        var m = Math.floor(sec / 60);
-        var s = sec % 60;
-        return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
-      }
+
       function startTimer(){
         stopTimer();
-        if(!state.timeLimitSec){
+        if(!state.startedAt || !state.timeLimitSec){
           timerEl.textContent = "--:--";
           return;
         }
         function tick(){
-          var elapsed = Math.floor((Date.now() - state.startedAt) / 1000);
-          var remain = state.timeLimitSec - elapsed;
-          timerEl.textContent = formatTime(remain);
-          if(remain <= 0){
+          var remain = state.timeLimitSec - elapsedSeconds();
+          timerEl.textContent = formatClock(remain);
+          if(remain <= 0 && !state.submitted){
             stopTimer();
-            finishTest();
+            submitExam(true);
           }
         }
         tick();
-        state.timerHandle = setInterval(tick, 1000);
+        state.timerHandle = setInterval(tick,1000);
       }
-      function flatten(blocks){
-        return blocks.reduce(function(acc, block){
-          block.questions.forEach(function(q){
-            acc.push({
-              section: block.subject,
-              id: q.id,
-              concept: q.concept,
-              q: q.q,
-              options: q.options,
-              answer: q.answer,
-              explanation: q.explanation,
-              subject: q.subject
-            });
+
+      function flattenBlocks(blocks){
+        var output = [];
+        (blocks || []).forEach(function(block){
+          (block.questions || []).forEach(function(q){
+            output.push(Object.assign({},q,{section:q.section || block.subject || q.subject || "General"}));
           });
-          return acc;
-        }, []);
+        });
+        return output;
       }
-      function showHome(){
-        stopTimer();
-        timerEl.textContent = "--:--";
-        var reviewer = window.CPO2025.getReviewer();
-        var reviewerHtml = Object.keys(reviewer).map(function(subject){
+
+      function normalizeQuestion(q,index){
+        var options = Array.isArray(q.options) ? q.options.slice() : [];
+        return {
+          id:q.id != null ? q.id : index + 1,
+          section:q.section || q.subject || q.chapter || "CPO 10th Edition",
+          subject:q.subject || q.section || "CPO 10th Edition",
+          chapter:q.chapter || "",
+          concept:q.concept || "",
+          q:q.q || q.question || "Question unavailable",
+          options:options,
+          answer:Number(q.answer),
+          explanation:q.explanation || q.logic || ""
+        };
+      }
+
+      function get2026Questions(){
+        var api = window.CPO2025;
+        if(!api) throw new Error("The CPO question system did not load.");
+
+        var questions = [];
+        if(typeof api.get2026PracticeQuestions === "function"){
+          questions = api.get2026PracticeQuestions();
+        }else if(typeof api.build2026PracticeExam === "function"){
+          var built = api.build2026PracticeExam();
+          questions = Array.isArray(built) && built.length && built[0] && Array.isArray(built[0].questions)
+            ? flattenBlocks(built)
+            : built;
+        }else if(typeof api.build2026PracticeBlocks === "function"){
+          questions = flattenBlocks(api.build2026PracticeBlocks());
+        }else{
+          throw new Error("The 2026 Practice Exam bank is missing. Replace cpo_2025_v2_system.js with the upgraded file supplied after this index file.");
+        }
+
+        if(!Array.isArray(questions) || questions.length !== 85){
+          throw new Error("The 2026 Practice Exam must contain exactly 85 questions. Found: " + (Array.isArray(questions) ? questions.length : 0));
+        }
+        return questions.map(normalizeQuestion);
+      }
+
+      function countAnswered(){
+        return state.answers.filter(function(v){return typeof v === "number";}).length;
+      }
+
+      function countFlagged(){
+        return state.flags.filter(Boolean).length;
+      }
+
+      function saveExamProgress(){
+        if(state.modeKey !== "practice2026" || state.submitted) return;
+        saveJson("cpo_2026_exam_progress",{
+          name:state.name,
+          questions:state.questions,
+          current:state.current,
+          answers:state.answers,
+          flags:state.flags,
+          startedAt:state.startedAt,
+          timeLimitSec:state.timeLimitSec,
+          modeKey:state.modeKey,
+          modeLabel:state.modeLabel
+        });
+      }
+
+      function clearExamProgress(){
+        try{ localStorage.removeItem("cpo_2026_exam_progress"); }catch(error){}
+      }
+
+      function getResumeData(){
+        var data = loadJson("cpo_2026_exam_progress",null);
+        if(!data || data.modeKey !== "practice2026" || !Array.isArray(data.questions) || data.questions.length !== 85) return null;
+        return data;
+      }
+
+      function reviewerHtml(){
+        var api = window.CPO2025;
+        if(!api || typeof api.getReviewer !== "function") return '<div class="empty">Reviewer is unavailable.</div>';
+        var reviewer = api.getReviewer();
+        return Object.keys(reviewer).map(function(subject){
           var badges = reviewer[subject].map(function(item){
             return '<span class="badge">' + escapeHtml(item) + '</span>';
           }).join("");
-          return '<div class="box"><strong>' + escapeHtml(subject) + '</strong><div style="margin-top:8px;">' + badges + '</div></div>';
+          return '<div class="box"><strong>' + escapeHtml(subject) + '</strong><div style="margin-top:7px">' + badges + '</div></div>';
         }).join("");
+      }
 
-        var recentHtml = state.history.length ? state.history.slice().reverse().slice(0,8).map(function(item){
-          return '<div class="box"><strong>' + escapeHtml(item.name || "Anonymous") + '</strong><div class="muted">' + escapeHtml(item.mode) + '</div><div>Score: <strong>' + item.score + '/' + item.total + '</strong> (' + item.percent + '%)</div></div>';
-        }).join("") : '<div class="empty">No previous tests yet.</div>';
+      function recentHistoryHtml(){
+        if(!state.history.length) return '<div class="empty">No completed tests yet.</div>';
+        return state.history.slice().reverse().slice(0,8).map(function(item){
+          return '<div class="box">' +
+            '<strong>' + escapeHtml(item.name || "Anonymous") + '</strong>' +
+            '<div class="muted" style="font-size:12px;margin-top:3px">' + escapeHtml(item.mode) + '</div>' +
+            '<div style="margin-top:5px">Score: <strong>' + item.score + '/' + item.total + '</strong> (' + item.percent + '%)</div>' +
+          '</div>';
+        }).join("");
+      }
+
+      function showHome(){
+        stopTimer();
+        timerEl.textContent = "--:--";
+        state.screen = "home";
+        state.confirmSubmit = false;
+        var resume = getResumeData();
 
         app.innerHTML =
-          '<div class="wrap">' +
-            '<div class="card">' +
-              '<div class="title">CPO 2025 Practice</div>' +
-              '<p class="subtitle">Built on a 2025-first foundation. Quiz modes pull from the same engine as the full test, with concept filtering and randomized answer order.</p>' +
-              '<div class="label">Your name</div>' +
-              '<input id="userName" type="text" placeholder="Enter your name or leave blank for Anonymous" value="' + escapeHtml(state.name) + '">' +
-              '<div class="btn-row">' +
-                '<button class="btn primary" id="btn10">Start 10 Question Quiz</button>' +
-                '<button class="btn" id="btn20">Start 20 Question Quiz</button>' +
-                '<button class="btn" id="btn300">Start Full Test (300)</button>' +
+          '<div class="page"><div class="layout">' +
+            '<section>' +
+              '<div class="card">' +
+                '<h1 class="title">CPO Practice Centre</h1>' +
+                '<p class="subtitle">Choose a quick quiz, the full 300-question test, or the dedicated 2026 Practice Exam based on the CPO 10th Edition reviewer.</p>' +
+                '<div class="label">Your name</div>' +
+                '<input id="userName" type="text" autocomplete="name" placeholder="Enter your name or leave blank for Anonymous" value="' + escapeHtml(state.name) + '">' +
+                '<div class="mode-grid">' +
+                  '<button class="mode-card" id="btn10" type="button"><div class="mode-name">10 Question Quiz</div><div class="mode-desc">A fast randomized drill from one subject area.</div><span class="mode-tag">15 minutes</span></button>' +
+                  '<button class="mode-card" id="btn20" type="button"><div class="mode-name">20 Question Quiz</div><div class="mode-desc">A longer randomized drill using two subject areas.</div><span class="mode-tag">30 minutes</span></button>' +
+                  '<button class="mode-card" id="btn300" type="button"><div class="mode-name">Full 300 Question Test</div><div class="mode-desc">The complete 2025 question bank in randomized blocks.</div><span class="mode-tag">5 hours</span></button>' +
+                  '<button class="mode-card featured" id="btn2026" type="button"><div class="mode-name">Start 2026 Practice Exam</div><div class="mode-desc">All 85 CPO 10th Edition questions with flags, jump navigation, review screen, detailed results, and retake controls.</div><span class="mode-tag">85 questions • Review before submit</span></button>' +
+                '</div>' +
+                (resume ? '<div class="confirm-panel"><strong>Unfinished 2026 exam found.</strong><div class="muted" style="margin:5px 0 11px">Resume from Question ' + (Number(resume.current) + 1) + ' with your saved answers and flags.</div><button class="btn primary" id="resume2026" type="button">Resume 2026 Practice Exam</button> <button class="btn" id="discardResume" type="button">Discard Saved Exam</button></div>' : '') +
               '</div>' +
-            '</div>' +
-            '<div class="card">' +
-              '<div class="side-title">Subjects Reviewer</div>' +
-              reviewerHtml +
-              '<div class="side-title" style="margin-top:18px;">Recent Results</div>' +
-              recentHtml +
-            '</div>' +
-          '</div>';
+            '</section>' +
+            '<aside class="side-sticky">' +
+              '<div class="card"><h2 class="section-title">Recent Results</h2>' + recentHistoryHtml() + '</div>' +
+              '<div class="card"><h2 class="section-title">Subjects Reviewer</h2>' + reviewerHtml() + '</div>' +
+            '</aside>' +
+          '</div></div>';
 
-        document.getElementById("btn10").onclick = function(){ begin("10 Question Quiz", 10); };
-        document.getElementById("btn20").onclick = function(){ begin("20 Question Quiz", 20); };
-        document.getElementById("btn300").onclick = function(){ begin("Full Test (300)", 300); };
+        function nameValue(){
+          var field = document.getElementById("userName");
+          return ((field && field.value) || "").trim() || "Anonymous";
+        }
+        document.getElementById("btn10").onclick = function(){beginLegacy("quiz10",nameValue(),10);};
+        document.getElementById("btn20").onclick = function(){beginLegacy("quiz20",nameValue(),20);};
+        document.getElementById("btn300").onclick = function(){beginLegacy("full300",nameValue(),300);};
+        document.getElementById("btn2026").onclick = function(){begin2026(nameValue());};
+
+        if(resume){
+          document.getElementById("resume2026").onclick = resume2026;
+          document.getElementById("discardResume").onclick = function(){clearExamProgress();showHome();};
+        }
       }
-      function begin(mode, total){
-        state.name = (document.getElementById("userName").value || "").trim() || "Anonymous";
-        state.mode = mode;
+
+      function beginLegacy(modeKey,name,total){
+        var api = window.CPO2025;
+        if(!api) throw new Error("The CPO question system did not load.");
+        state.name = name;
+        state.modeKey = modeKey;
+        state.modeLabel = total === 10 ? "10 Question Quiz" : total === 20 ? "20 Question Quiz" : "Full Test (300)";
         state.current = 0;
         state.answers = [];
-        state.score = 0;
+        state.flags = [];
+        state.submitted = false;
+        state.result = null;
+        state.completedAt = null;
+        state.reviewFilter = "all";
+        state.confirmSubmit = false;
 
-        var blocks;
-        if(total === 10){
-          blocks = window.CPO2025.buildQuizBlocks(10);
-          state.timeLimitSec = 10 * 90;
-        }else if(total === 20){
-          blocks = window.CPO2025.buildQuizBlocks(20);
-          state.timeLimitSec = 20 * 90;
-        }else{
-          blocks = window.CPO2025.buildFullBlocks(300);
-          state.timeLimitSec = 300 * 60;
-        }
-
-        state.questions = flatten(blocks);
+        var blocks = total === 300 ? api.buildFullBlocks(300) : api.buildQuizBlocks(total);
+        state.questions = flattenBlocks(blocks).map(normalizeQuestion);
         state.startedAt = Date.now();
+        state.timeLimitSec = total === 300 ? 300 * 60 : total * 90;
         startTimer();
         renderQuestion();
       }
-      function renderQuestion(){
-        var q = state.questions[state.current];
-        if(!q){ finishTest(); return; }
 
-        var optionsHtml = q.options.map(function(opt, idx){
-          var selected = state.answers[state.current] === idx ? ' selected' : '';
-          return '<button class="option' + selected + '" data-choice="' + idx + '">' + escapeHtml(opt) + '</button>';
+      function begin2026(name){
+        state.name = name;
+        state.modeKey = "practice2026";
+        state.modeLabel = "2026 Practice Exam";
+        state.questions = get2026Questions();
+        state.current = 0;
+        state.answers = new Array(state.questions.length);
+        state.flags = new Array(state.questions.length).fill(false);
+        state.startedAt = Date.now();
+        state.completedAt = null;
+        state.timeLimitSec = 3 * 60 * 60;
+        state.submitted = false;
+        state.result = null;
+        state.reviewFilter = "all";
+        state.confirmSubmit = false;
+        saveExamProgress();
+        startTimer();
+        renderQuestion();
+      }
+
+      function resume2026(){
+        var data = getResumeData();
+        if(!data){showHome();return;}
+        state.name = data.name || "Anonymous";
+        state.modeKey = "practice2026";
+        state.modeLabel = data.modeLabel || "2026 Practice Exam";
+        state.questions = data.questions.map(normalizeQuestion);
+        state.current = Math.max(0,Math.min(Number(data.current) || 0,state.questions.length - 1));
+        state.answers = Array.isArray(data.answers) ? data.answers : new Array(state.questions.length);
+        state.flags = Array.isArray(data.flags) ? data.flags : new Array(state.questions.length).fill(false);
+        state.startedAt = Number(data.startedAt) || Date.now();
+        state.completedAt = null;
+        state.timeLimitSec = Number(data.timeLimitSec) || 3 * 60 * 60;
+        state.submitted = false;
+        state.result = null;
+        state.reviewFilter = "all";
+        state.confirmSubmit = false;
+        startTimer();
+        renderQuestion();
+      }
+
+      function paletteHtml(){
+        return state.questions.map(function(q,index){
+          var classes = ["q-jump"];
+          if(typeof state.answers[index] === "number") classes.push("answered");
+          if(state.flags[index]) classes.push("flagged");
+          if(index === state.current) classes.push("current");
+          return '<button class="' + classes.join(" ") + '" data-jump="' + index + '" type="button" aria-label="Go to question ' + (index + 1) + '">' +
+            (index + 1) + (state.flags[index] ? '<span class="flag-mark">⚑</span>' : '') +
+          '</button>';
+        }).join("");
+      }
+
+      function attachPaletteHandlers(){
+        Array.prototype.forEach.call(document.querySelectorAll("[data-jump]"),function(btn){
+          btn.onclick = function(){
+            state.current = Number(btn.getAttribute("data-jump"));
+            saveExamProgress();
+            renderQuestion();
+          };
+        });
+      }
+
+      function renderQuestion(){
+        state.screen = "question";
+        var q = state.questions[state.current];
+        if(!q){
+          if(state.modeKey === "practice2026") showReviewScreen();
+          else submitExam(false);
+          return;
+        }
+
+        var optionsHtml = q.options.map(function(option,index){
+          var selected = state.answers[state.current] === index;
+          return '<button class="option' + (selected ? ' selected' : '') + '" data-choice="' + index + '" type="button">' +
+            '<span class="option-letter">' + String.fromCharCode(65 + index) + '</span>' +
+            '<span>' + escapeHtml(option) + '</span>' +
+          '</button>';
         }).join("");
 
+        var answered = countAnswered();
+        var flagged = countFlagged();
+        var is2026 = state.modeKey === "practice2026";
+        var progress = Math.round(((state.current + 1) / state.questions.length) * 100);
+
         app.innerHTML =
-          '<div class="wrap">' +
-            '<div class="card">' +
+          '<div class="page"><div class="layout">' +
+            '<section class="card">' +
               '<div class="stats">' +
                 '<div class="stat"><div class="k">User</div><div class="v">' + escapeHtml(state.name) + '</div></div>' +
                 '<div class="stat"><div class="k">Question</div><div class="v">' + (state.current + 1) + '/' + state.questions.length + '</div></div>' +
-                '<div class="stat"><div class="k">Score</div><div class="v">' + state.score + '</div></div>' +
-                '<div class="stat"><div class="k">Mode</div><div class="v">' + (state.mode.indexOf("300") !== -1 ? '300' : state.mode.indexOf("20") !== -1 ? '20' : '10') + '</div></div>' +
+                '<div class="stat"><div class="k">Answered</div><div class="v">' + answered + '</div></div>' +
+                '<div class="stat"><div class="k">Mode</div><div class="v">' + escapeHtml(is2026 ? "2026" : state.modeKey === "full300" ? "300" : state.modeKey === "quiz20" ? "20" : "10") + '</div></div>' +
               '</div>' +
-              '<div class="section-label">' + escapeHtml(q.section) + '</div>' +
+              '<div class="section-pill">' + escapeHtml(q.section) + (q.chapter ? ' • ' + escapeHtml(q.chapter) : '') + '</div>' +
               '<div class="question">' + escapeHtml(q.q) + '</div>' +
               optionsHtml +
-              '<div class="nav">' +
-                '<button class="btn" id="prevBtn"' + (state.current === 0 ? ' disabled' : '') + '>Previous</button>' +
-                '<button class="btn" id="homeBtn">Home</button>' +
-                '<button class="btn primary" id="nextBtn">' + (state.current === state.questions.length - 1 ? 'Finish Test' : 'Next') + '</button>' +
+              '<div class="question-nav">' +
+                '<div class="question-nav-group">' +
+                  '<button class="btn" id="prevBtn" type="button"' + (state.current === 0 ? ' disabled' : '') + '>Previous</button>' +
+                  (is2026 ? '<button class="btn ' + (state.flags[state.current] ? 'flagged' : 'warning') + '" id="flagBtn" type="button">' + (state.flags[state.current] ? 'Unflag Question' : 'Flag Question') + '</button>' : '') +
+                '</div>' +
+                '<div class="question-nav-group">' +
+                  '<button class="btn" id="homeBtn" type="button">Main Menu</button>' +
+                  '<button class="btn primary" id="nextBtn" type="button">' +
+                    (is2026 && state.current === state.questions.length - 1 ? 'Review Exam' : !is2026 && state.current === state.questions.length - 1 ? 'Finish Test' : 'Next') +
+                  '</button>' +
+                '</div>' +
               '</div>' +
-            '</div>' +
-            '<div class="card">' +
-              '<div class="side-title">Current Section</div>' +
-              '<div class="box">' + escapeHtml(q.section) + '</div>' +
-              '<div class="side-title">Progress</div>' +
-              '<div class="box">Answered: ' + state.answers.filter(function(v){ return typeof v === "number"; }).length + ' / ' + state.questions.length + '</div>' +
-            '</div>' +
-          '</div>';
+            '</section>' +
+            '<aside class="side-sticky">' +
+              '<div class="card">' +
+                '<h2 class="section-title">Progress</h2>' +
+                '<div class="muted" style="font-size:12px">Question ' + (state.current + 1) + ' of ' + state.questions.length + '</div>' +
+                '<div class="progress-track"><div class="progress-fill" style="width:' + progress + '%"></div></div>' +
+                '<div class="status-row">' +
+                  '<div class="status-box"><strong>' + answered + '</strong><span>Answered</span></div>' +
+                  '<div class="status-box"><strong>' + (state.questions.length - answered) + '</strong><span>Unanswered</span></div>' +
+                  '<div class="status-box"><strong>' + flagged + '</strong><span>Flagged</span></div>' +
+                '</div>' +
+                (is2026 ? '<h3 class="small-title">Jump to Question</h3><div class="palette">' + paletteHtml() + '</div><div class="legend"><span><i class="l-answered"></i>Answered</span><span><i class="l-flagged"></i>Flagged</span><span><i class="l-current"></i>Current</span></div><button class="btn wide" id="reviewBtn" type="button" style="margin-top:14px">Open Review Screen</button>' : '<div class="box">Select an answer before moving to the next question.</div>') +
+              '</div>' +
+            '</aside>' +
+          '</div></div>';
 
-        Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"), function(btn){
+        Array.prototype.forEach.call(document.querySelectorAll("[data-choice]"),function(btn){
           btn.onclick = function(){
-            state.answers[state.current] = parseInt(btn.getAttribute("data-choice"), 10);
+            state.answers[state.current] = Number(btn.getAttribute("data-choice"));
+            saveExamProgress();
             renderQuestion();
           };
         });
 
         document.getElementById("prevBtn").onclick = function(){
-          if(state.current > 0){
-            state.current--;
-            renderQuestion();
-          }
+          if(state.current > 0){state.current--;saveExamProgress();renderQuestion();}
         };
+
         document.getElementById("nextBtn").onclick = function(){
-          if(typeof state.answers[state.current] !== "number") return;
-          if(state.current === state.questions.length - 1){
-            finishTest();
+          if(is2026){
+            if(state.current === state.questions.length - 1){showReviewScreen();}
+            else{state.current++;saveExamProgress();renderQuestion();}
           }else{
-            state.current++;
-            renderQuestion();
+            if(typeof state.answers[state.current] !== "number") return;
+            if(state.current === state.questions.length - 1) submitExam(false);
+            else{state.current++;renderQuestion();}
           }
         };
+
         document.getElementById("homeBtn").onclick = function(){
+          if(is2026) saveExamProgress();
           showHome();
         };
+
+        if(is2026){
+          document.getElementById("flagBtn").onclick = function(){
+            state.flags[state.current] = !state.flags[state.current];
+            saveExamProgress();
+            renderQuestion();
+          };
+          document.getElementById("reviewBtn").onclick = showReviewScreen;
+          attachPaletteHandlers();
+        }
       }
-      function finishTest(){
-        stopTimer();
-        var wrong = [];
-        var weak = {};
-        state.score = 0;
 
-        state.questions.forEach(function(q, idx){
-          var chosen = state.answers[idx];
-          if(chosen === q.answer){
-            state.score++;
-          }else{
-            wrong.push({
-              q: q.q,
-              section: q.section,
-              chosen: typeof chosen === "number" ? q.options[chosen] : "(No answer)",
-              correct: q.options[q.answer],
-              explanation: q.explanation
-            });
-            weak[q.section] = (weak[q.section] || 0) + 1;
-          }
-        });
-
-        var weakHtml = Object.keys(weak).length ? Object.keys(weak).sort(function(a,b){ return weak[b]-weak[a]; }).map(function(k){
-          return '<div class="box"><strong>' + escapeHtml(k) + '</strong> — ' + weak[k] + ' mistake' + (weak[k] > 1 ? 's' : '') + '</div>';
-        }).join("") : '<div class="empty">No weak sections this round.</div>';
-
-        var wrongHtml = wrong.length ? wrong.map(function(item, idx){
-          return '<div class="box"><strong>' + (idx + 1) + '. ' + escapeHtml(item.q) + '</strong><div style="margin-top:8px;"><span class="bad">Your answer:</span> ' + escapeHtml(item.chosen) + '</div><div style="margin-top:6px;"><span class="good">Correct answer:</span> ' + escapeHtml(item.correct) + '</div><div style="margin-top:6px;" class="muted">Section: ' + escapeHtml(item.section) + '</div><div style="margin-top:8px;">' + escapeHtml(item.explanation) + '</div></div>';
-        }).join("") : '<div class="empty">Perfect run. No mistakes to review.</div>';
-
-        var percent = Math.round((state.score / state.questions.length) * 100);
-        state.history.push({
-          name: state.name,
-          mode: state.mode,
-          score: state.score,
-          total: state.questions.length,
-          percent: percent
-        });
-        saveJson("cpo2025_v2_history", state.history);
+      function showReviewScreen(){
+        if(state.modeKey !== "practice2026"){submitExam(false);return;}
+        state.screen = "review";
+        saveExamProgress();
+        var answered = countAnswered();
+        var unanswered = state.questions.length - answered;
+        var flagged = countFlagged();
+        var questionButtons = state.questions.map(function(q,index){
+          var classes = ["review-q"];
+          if(typeof state.answers[index] !== "number") classes.push("unanswered");
+          if(state.flags[index]) classes.push("flagged");
+          return '<button class="' + classes.join(" ") + '" data-review-jump="' + index + '" type="button">' + (index + 1) + '</button>';
+        }).join("");
 
         app.innerHTML =
-          '<div class="wrap">' +
-            '<div class="card">' +
-              '<div class="title">Test Complete</div>' +
-              '<p class="subtitle">' + escapeHtml(state.name) + ', your results are ready.</p>' +
-              '<div class="stats">' +
-                '<div class="stat"><div class="k">Score</div><div class="v">' + state.score + '/' + state.questions.length + '</div></div>' +
-                '<div class="stat"><div class="k">Percent</div><div class="v">' + percent + '%</div></div>' +
-                '<div class="stat"><div class="k">Mistakes</div><div class="v">' + wrong.length + '</div></div>' +
-                '<div class="stat"><div class="k">Mode</div><div class="v">' + escapeHtml(state.mode) + '</div></div>' +
+          '<div class="page"><div class="layout">' +
+            '<section class="card">' +
+              '<h1 class="title">Review Your Exam</h1>' +
+              '<p class="subtitle">Check unanswered and flagged questions before submitting. Your answers are not graded until you press Submit Exam.</p>' +
+              '<div class="review-summary">' +
+                '<div class="review-block"><strong class="good">' + answered + '</strong><span>Answered</span></div>' +
+                '<div class="review-block"><strong class="warning">' + unanswered + '</strong><span>Unanswered</span></div>' +
+                '<div class="review-block"><strong style="color:var(--flag)">' + flagged + '</strong><span>Flagged</span></div>' +
               '</div>' +
-              '<div class="side-title">Mistakes Review</div>' +
-              wrongHtml +
-              '<div class="nav">' +
-                '<button class="btn" id="restartBtn">Restart Same Mode</button>' +
-                '<button class="btn primary" id="doneHomeBtn">Home</button>' +
+              '<h2 class="section-title">Question Status</h2>' +
+              '<div class="review-list">' + questionButtons + '</div>' +
+              (unanswered > 0 ? '<div class="confirm-panel"><strong>You still have ' + unanswered + ' unanswered question' + (unanswered === 1 ? '' : 's') + '.</strong><div class="muted" style="margin-top:5px">You may return to the exam or submit with unanswered questions counted as incorrect.</div></div>' : '<div class="box good">All 85 questions have answers.</div>') +
+              '<div class="question-nav">' +
+                '<div class="question-nav-group"><button class="btn" id="returnExamBtn" type="button">Return to Exam</button><button class="btn" id="firstUnansweredBtn" type="button"' + (unanswered === 0 ? ' disabled' : '') + '>Go to First Unanswered</button></div>' +
+                '<div class="question-nav-group"><button class="btn danger" id="submitBtn" type="button">Submit Exam</button></div>' +
               '</div>' +
-            '</div>' +
-            '<div class="card">' +
-              '<div class="side-title">Weak Sections</div>' +
-              weakHtml +
-            '</div>' +
-          '</div>';
+              (state.confirmSubmit ? '<div class="confirm-panel"><strong>Final submission</strong><div style="margin:6px 0 12px">Once submitted, your score and correct answers will be shown.</div><button class="btn danger" id="confirmSubmitBtn" type="button">Yes, Submit Now</button> <button class="btn" id="cancelSubmitBtn" type="button">Cancel</button></div>' : '') +
+            '</section>' +
+            '<aside class="side-sticky"><div class="card"><h2 class="section-title">Before You Submit</h2><div class="box">Review every flagged question.</div><div class="box">Unanswered questions count as incorrect.</div><div class="box">Your result will show score, percentage, pass/fail status, and total time.</div><button class="btn wide" id="menuFromReview" type="button">Save and Return to Main Menu</button></div></aside>' +
+          '</div></div>';
 
-        document.getElementById("restartBtn").onclick = function(){
-          if(state.mode.indexOf("300") !== -1) begin("Full Test (300)", 300);
-          else if(state.mode.indexOf("20") !== -1) begin("20 Question Quiz", 20);
-          else begin("10 Question Quiz", 10);
+        Array.prototype.forEach.call(document.querySelectorAll("[data-review-jump]"),function(btn){
+          btn.onclick = function(){
+            state.current = Number(btn.getAttribute("data-review-jump"));
+            state.confirmSubmit = false;
+            renderQuestion();
+          };
+        });
+        document.getElementById("returnExamBtn").onclick = function(){state.confirmSubmit=false;renderQuestion();};
+        document.getElementById("firstUnansweredBtn").onclick = function(){
+          var index = state.answers.findIndex(function(v){return typeof v !== "number";});
+          if(index >= 0){state.current=index;state.confirmSubmit=false;renderQuestion();}
         };
-        document.getElementById("doneHomeBtn").onclick = function(){
-          showHome();
+        document.getElementById("submitBtn").onclick = function(){state.confirmSubmit=true;showReviewScreen();};
+        document.getElementById("menuFromReview").onclick = function(){saveExamProgress();showHome();};
+
+        if(state.confirmSubmit){
+          document.getElementById("confirmSubmitBtn").onclick = function(){submitExam(false);};
+          document.getElementById("cancelSubmitBtn").onclick = function(){state.confirmSubmit=false;showReviewScreen();};
+        }
+      }
+
+      function calculateResult(){
+        var score = 0;
+        var details = state.questions.map(function(q,index){
+          var chosen = state.answers[index];
+          var correct = chosen === q.answer;
+          if(correct) score++;
+          return {
+            index:index,
+            question:q,
+            chosen:chosen,
+            correct:correct,
+            flagged:Boolean(state.flags[index])
+          };
+        });
+        var percent = state.questions.length ? Math.round((score / state.questions.length) * 100) : 0;
+        return {
+          score:score,
+          total:state.questions.length,
+          percent:percent,
+          pass:percent >= PASS_PERCENT,
+          wrong:state.questions.length - score,
+          unanswered:state.answers.filter(function(v){return typeof v !== "number";}).length,
+          durationSec:elapsedSeconds(),
+          details:details
         };
+      }
+
+      function submitExam(autoSubmitted){
+        if(state.submitted) return;
+        stopTimer();
+        state.completedAt = Date.now();
+        state.submitted = true;
+        state.confirmSubmit = false;
+        state.result = calculateResult();
+        clearExamProgress();
+        state.history.push({
+          name:state.name,
+          mode:state.modeLabel + (autoSubmitted ? " — Time Expired" : ""),
+          score:state.result.score,
+          total:state.result.total,
+          percent:state.result.percent,
+          date:new Date().toISOString()
+        });
+        saveJson("cpo2025_v2_history",state.history);
+        renderResults(autoSubmitted);
+      }
+
+      function renderResults(autoSubmitted){
+        state.screen = "results";
+        timerEl.textContent = formatClock(state.result.durationSec);
+        var r = state.result;
+        app.innerHTML =
+          '<div class="page"><div class="layout">' +
+            '<section class="card">' +
+              '<div class="result-hero">' +
+                '<h1 class="title">Exam Results</h1>' +
+                '<p class="subtitle">' + escapeHtml(state.name) + ', your ' + escapeHtml(state.modeLabel) + ' is complete.' + (autoSubmitted ? ' Time expired and the exam was submitted automatically.' : '') + '</p>' +
+                '<div class="result-score">' + r.score + '/' + r.total + '</div>' +
+                '<div class="result-status ' + (r.pass ? 'pass' : 'fail') + '">' + (r.pass ? 'PASS' : 'FAIL') + '</div>' +
+              '</div>' +
+              '<div class="stats">' +
+                '<div class="stat"><div class="k">Score</div><div class="v">' + r.score + '/' + r.total + '</div></div>' +
+                '<div class="stat"><div class="k">Percentage</div><div class="v">' + r.percent + '%</div></div>' +
+                '<div class="stat"><div class="k">Incorrect</div><div class="v">' + r.wrong + '</div></div>' +
+                '<div class="stat"><div class="k">Time</div><div class="v">' + formatClock(r.durationSec) + '</div></div>' +
+              '</div>' +
+              '<div class="btn-row">' +
+                '<button class="btn primary" id="reviewAllBtn" type="button">Review Entire Exam</button>' +
+                '<button class="btn" id="reviewWrongBtn" type="button">Review Incorrect</button>' +
+                '<button class="btn" id="retakeBtn" type="button">Retake</button>' +
+                '<button class="btn" id="resultsHomeBtn" type="button">Back to Main Menu</button>' +
+              '</div>' +
+            '</section>' +
+            '<aside class="side-sticky"><div class="card"><h2 class="section-title">Summary</h2><div class="box"><strong>Pass mark:</strong> ' + PASS_PERCENT + '%</div><div class="box"><strong>Answered:</strong> ' + (r.total - r.unanswered) + '/' + r.total + '</div><div class="box"><strong>Unanswered:</strong> ' + r.unanswered + '</div><div class="box"><strong>Flagged at submission:</strong> ' + countFlagged() + '</div></div></aside>' +
+          '</div></div>';
+
+        document.getElementById("reviewAllBtn").onclick = function(){state.reviewFilter="all";renderAnswerReview();};
+        document.getElementById("reviewWrongBtn").onclick = function(){state.reviewFilter="incorrect";renderAnswerReview();};
+        document.getElementById("retakeBtn").onclick = retakeCurrentMode;
+        document.getElementById("resultsHomeBtn").onclick = showHome;
+      }
+
+      function renderAnswerReview(){
+        state.screen = "answerReview";
+        var details = state.result.details.filter(function(item){
+          return state.reviewFilter === "all" || !item.correct;
+        });
+        var content = details.length ? details.map(function(item,position){
+          var q = item.question;
+          var chosenText = typeof item.chosen === "number" ? q.options[item.chosen] : "(No answer)";
+          var correctText = q.options[q.answer];
+          return '<div class="box review-answer">' +
+            '<div class="section-pill">Question ' + (item.index + 1) + ' • ' + escapeHtml(q.section) + (item.flagged ? ' • Flagged' : '') + '</div>' +
+            '<div class="question">' + escapeHtml(q.q) + '</div>' +
+            '<div class="answer-line ' + (item.correct ? 'correct' : 'incorrect') + '"><strong>Your answer:</strong> ' + escapeHtml(chosenText) + '</div>' +
+            '<div class="answer-line correct"><strong>Correct answer:</strong> ' + escapeHtml(correctText) + '</div>' +
+            (q.explanation ? '<div class="explanation"><strong>Logic:</strong> ' + escapeHtml(q.explanation) + '</div>' : '') +
+          '</div>';
+        }).join("") : '<div class="box good">Perfect score. There are no incorrect answers to review.</div>';
+
+        app.innerHTML =
+          '<div class="page"><div class="layout">' +
+            '<section class="card">' +
+              '<h1 class="title">' + (state.reviewFilter === "all" ? 'Review Entire Exam' : 'Review Incorrect Answers') + '</h1>' +
+              '<p class="subtitle">Showing ' + details.length + ' question' + (details.length === 1 ? '' : 's') + '.</p>' +
+              content +
+              '<div class="btn-row"><button class="btn primary" id="backResultsBtn" type="button">Back to Results</button><button class="btn" id="reviewRetakeBtn" type="button">Retake</button><button class="btn" id="reviewHomeBtn" type="button">Main Menu</button></div>' +
+            '</section>' +
+            '<aside class="side-sticky"><div class="card"><h2 class="section-title">Review Filter</h2><button class="btn wide ' + (state.reviewFilter === "all" ? 'primary' : '') + '" id="filterAllBtn" type="button">Entire Exam</button><button class="btn wide ' + (state.reviewFilter === "incorrect" ? 'primary' : '') + '" id="filterWrongBtn" type="button" style="margin-top:8px">Incorrect Only</button></div></aside>' +
+          '</div></div>';
+
+        document.getElementById("backResultsBtn").onclick = function(){renderResults(false);};
+        document.getElementById("reviewRetakeBtn").onclick = retakeCurrentMode;
+        document.getElementById("reviewHomeBtn").onclick = showHome;
+        document.getElementById("filterAllBtn").onclick = function(){state.reviewFilter="all";renderAnswerReview();};
+        document.getElementById("filterWrongBtn").onclick = function(){state.reviewFilter="incorrect";renderAnswerReview();};
+      }
+
+      function retakeCurrentMode(){
+        var mode = state.modeKey;
+        var name = state.name || "Anonymous";
+        if(mode === "practice2026") begin2026(name);
+        else if(mode === "full300") beginLegacy("full300",name,300);
+        else if(mode === "quiz20") beginLegacy("quiz20",name,20);
+        else beginLegacy("quiz10",name,10);
       }
 
       themeBtn.onclick = function(){
         state.darkMode = !state.darkMode;
-        localStorage.setItem("cpo2025_v2_dark", state.darkMode ? "1" : "0");
+        localStorage.setItem("cpo2025_v2_dark",state.darkMode ? "1" : "0");
         applyTheme();
       };
 
-      state.history = loadJson("cpo2025_v2_history", []);
+      state.history = loadJson("cpo2025_v2_history",[]);
       state.darkMode = localStorage.getItem("cpo2025_v2_dark") === "1";
       applyTheme();
       showHome();
